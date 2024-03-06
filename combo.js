@@ -305,87 +305,10 @@ DndSimulator = {
     return event;
   },
 };
-async function doit() {
-  // Function that returns a function that clicks all elements with class className
-  const clicker = (className) => () =>
-    Object.values(document.getElementsByClassName(className)).forEach((x) =>
-      x.click()
-    );
 
-  // Check all 2x Speed boxes
-  Object.values(document.getElementsByClassName("zb-checkbox")) // Get all checkbox divs
-    .filter((d) =>
-      Object.values(d.children) // Filter them...
-        .some((t) => t.innerText === "2x speed")
-    ) // ...such that the div is for a 2x speed checkbox
-    .forEach((x) => x.children[0].click()); // Click/check the checkbox in the remaining divs
+// BEGIN MY CODE
 
-  // Click all start buttons
-  clicker("start-button")();
-
-  // Keep clicking all play buttons
-  setInterval(clicker("play-button bounce"), 100);
-
-  async function doDnD(element) {
-    const source = Object.values(element.children[1].children[0].children).map(
-      (x) => x.children[0].children[0].children[0].innerText
-    );
-    const dest = Object.values(element.children)
-      .filter((x) => x.getAttribute("class") === "definition-row")
-      .map((x) => x.children[0].getAttribute("id"));
-
-    const resetBtn = Object.values(element.children).find(
-      (x) => x.getAttribute("class") === "reset-button-container"
-    ).children[0];
-
-    const map = {};
-    for (let i = 0; i < source.length; ++i) {
-      for (let j = 0; j < source.length; ++j) {
-        if (Object.values(map).some((x) => x === dest[j])) {
-          continue;
-        }
-        DndSimulator.simulate(getSrcByName(element, source[i]), `#${dest[j]}`);
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        if (checkAnswer(dest[j])) {
-          map[source[i]] = dest[j];
-        }
-        resetBtn.click();
-        await new Promise((resolve) => setTimeout(resolve, 300));
-      }
-    }
-    console.log(map);
-    for (const a in map) {
-      DndSimulator.simulate(getSrcByName(element, a), `#${map[a]}`);
-      await new Promise((resolve) => setTimeout(resolve, 300));
-    }
-  }
-
-  function checkAnswer(e) {
-    return (
-      document
-        .getElementById(e)
-        .parentElement.children[1].getAttribute("class") ===
-      "definition-match-explanation correct"
-    );
-  }
-
-  function getSrcByName(element, text) {
-    return Object.values(element.children[1].children[0].children).find(
-      (x) => x.children[0].children[0].children[0].innerText === text
-    ).children[0];
-  }
-
-  Object.values(
-    document.getElementsByClassName("definition-match-payload")
-  ).forEach(doDnD);
-  Object.values(document.getElementsByClassName("question-choices")).forEach(
-    async (question) => {
-      for (let i = 0; i < question.children.length; ++i) {
-        question.children[i].children[0].click();
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-    }
-  );
+async function shortAnswers() {
   const shortAnswers = Object.values(
     document.getElementsByClassName("short-answer-question")
   );
@@ -414,4 +337,109 @@ async function doit() {
     checkBtn.click();
   });
 }
-await doit();
+
+async function multipleChoice(SLEEP_TIME) {
+  Object.values(
+    document.getElementsByClassName("multiple-choice-question")
+  ).forEach(async (question) => {
+    const choices = Object.values(
+      question.children[0].children[1].children
+    ).map((x) => x.children[0]);
+
+    for (
+      let i = 0;
+      question.children[1].getAttribute("class") !==
+      "zb-explanation has-explanation correct";
+      ++i
+    ) {
+      choices[i].click();
+      await new Promise((resolve) => setTimeout(resolve, SLEEP_TIME));
+    }
+  });
+}
+
+async function dragAndDrop(SLEEP_TIME) {
+  async function doDnD(element) {
+    const source = Object.values(element.children[1].children[0].children).map(
+      (x) => x.children[0].children[0].children[0].innerText
+    );
+    const dest = Object.values(element.children)
+      .filter((x) => x.getAttribute("class") === "definition-row")
+      .map((x) => x.children[0].getAttribute("id"));
+
+    const resetBtn = Object.values(element.children).find(
+      (x) => x.getAttribute("class") === "reset-button-container"
+    ).children[0];
+
+    const map = {};
+    for (let i = 0; i < source.length; ++i) {
+      for (let j = 0; j < source.length; ++j) {
+        if (Object.values(map).some((x) => x === dest[j])) {
+          continue;
+        }
+        DndSimulator.simulate(getSrcByName(element, source[i]), `#${dest[j]}`);
+        await new Promise((resolve) => setTimeout(resolve, SLEEP_TIME));
+        if (checkAnswer(dest[j])) {
+          map[source[i]] = dest[j];
+        }
+        resetBtn.click();
+        await new Promise((resolve) => setTimeout(resolve, SLEEP_TIME));
+      }
+    }
+    console.log(map);
+    for (const a in map) {
+      DndSimulator.simulate(getSrcByName(element, a), `#${map[a]}`);
+      await new Promise((resolve) => setTimeout(resolve, SLEEP_TIME));
+    }
+  }
+
+  function checkAnswer(e) {
+    return (
+      document
+        .getElementById(e)
+        .parentElement.children[1].getAttribute("class") ===
+      "definition-match-explanation correct"
+    );
+  }
+
+  function getSrcByName(element, text) {
+    return Object.values(element.children[1].children[0].children).find(
+      (x) => x.children[0].children[0].children[0].innerText === text
+    ).children[0];
+  }
+
+  Object.values(
+    document.getElementsByClassName("definition-match-payload")
+  ).forEach(doDnD);
+}
+
+function animations() {
+  // Function that returns a function that clicks all elements with class className
+  const clicker = (className) => () =>
+    Object.values(document.getElementsByClassName(className)).forEach((x) =>
+      x.click()
+    );
+
+  // Check all 2x Speed boxes
+  Object.values(document.getElementsByClassName("zb-checkbox")) // Get all checkbox divs
+    .filter((d) =>
+      Object.values(d.children) // Filter them...
+        .some((t) => t.innerText === "2x speed")
+    ) // ...such that the div is for a 2x speed checkbox
+    .forEach((x) => x.children[0].click()); // Click/check the checkbox in the remaining divs
+
+  // Click all start buttons
+  clicker("start-button")();
+
+  // Keep clicking all play buttons
+  setInterval(clicker("play-button bounce"), 500);
+}
+
+async function callAll() {
+  const SLEEP_TIME = 400;
+  animations();
+  await dragAndDrop(SLEEP_TIME);
+  await multipleChoice(SLEEP_TIME);
+  await shortAnswers();
+}
+await callAll();
