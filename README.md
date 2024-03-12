@@ -13,3 +13,4 @@ This script adds a floating menu to your ZyBooks page that lets you select which
 1. Click start
 1. Click the menu to collapse it (optional)
 1. Increase the sleep parameter on future runs if you experience glitches or wrong answers
+1. Click stop to stop the auto-clicking for animations (optional)
