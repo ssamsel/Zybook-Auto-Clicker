@@ -426,11 +426,12 @@ function animations() {
   clicker("start-button")();
 
   // Keep clicking all play buttons
-  setInterval(clicker("play-button bounce"), 500);
+  return setInterval(clicker("play-button bounce"), 500);
 }
+let animationClicker = undefined;
 async function call(sleep, options) {
   if (options[0]) {
-    animations();
+    animationClicker = animations();
   }
   if (options[1]) {
     await dragAndDrop(sleep);
@@ -505,8 +506,16 @@ startButton.addEventListener("click", function (event) {
   event.stopPropagation();
 });
 
+const stopButton = document.createElement("button");
+stopButton.innerHTML = "Stop Animations";
+stopButton.style.display = "block"; // Ensure it's on a separate line
+stopButton.addEventListener("click", function (event) {
+  clearInterval(animationClicker);
+  event.stopPropagation();
+});
 // Append start button to dropdown content
 dropdownContent.appendChild(startButton);
+dropdownContent.appendChild(stopButton);
 
 // Prevent button click event from closing dropdown
 startButton.addEventListener("click", function (event) {

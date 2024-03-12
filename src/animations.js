@@ -17,5 +17,5 @@ function animations() {
   clicker("start-button")();
 
   // Keep clicking all play buttons
-  setInterval(clicker("play-button bounce"), 500);
+  return setInterval(clicker("play-button bounce"), 500);
 }
