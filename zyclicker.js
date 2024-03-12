@@ -305,9 +305,6 @@ DndSimulator = {
     return event;
   },
 };
-
-// BEGIN MY CODE
-
 async function shortAnswers() {
   const shortAnswers = Object.values(
     document.getElementsByClassName("short-answer-question")
@@ -337,7 +334,6 @@ async function shortAnswers() {
     checkBtn.click();
   });
 }
-
 async function multipleChoice(SLEEP_TIME) {
   Object.values(
     document.getElementsByClassName("multiple-choice-question")
@@ -357,7 +353,6 @@ async function multipleChoice(SLEEP_TIME) {
     }
   });
 }
-
 async function dragAndDrop(SLEEP_TIME) {
   async function doDnD(element) {
     const source = Object.values(element.children[1].children[0].children).map(
@@ -412,7 +407,6 @@ async function dragAndDrop(SLEEP_TIME) {
     document.getElementsByClassName("definition-match-payload")
   ).forEach(doDnD);
 }
-
 function animations() {
   // Function that returns a function that clicks all elements with class className
   const clicker = (className) => () =>
@@ -434,7 +428,6 @@ function animations() {
   // Keep clicking all play buttons
   setInterval(clicker("play-button bounce"), 500);
 }
-
 async function call(sleep, options) {
   if (options[0]) {
     animations();
@@ -449,7 +442,6 @@ async function call(sleep, options) {
     shortAnswers(sleep);
   }
 }
-
 // Create the dropdown button
 const dropdownButton = document.createElement("button");
 dropdownButton.innerHTML = "<b>ZyClicker Menu</b>";
