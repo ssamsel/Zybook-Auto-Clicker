@@ -433,13 +433,13 @@ async function call(sleep, options) {
     animations();
   }
   if (options[1]) {
-    dragAndDrop(sleep);
+    await dragAndDrop(sleep);
   }
   if (options[2]) {
-    multipleChoice(sleep);
+    await multipleChoice(sleep);
   }
   if (options[3]) {
-    shortAnswers(sleep);
+    await shortAnswers(sleep);
   }
 }
 // Create the dropdown button
