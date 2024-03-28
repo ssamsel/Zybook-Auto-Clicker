@@ -83,9 +83,20 @@ stopButton.addEventListener("click", function (event) {
   clearInterval(animationClicker);
   event.stopPropagation();
 });
+
+const quitButton = document.createElement("button");
+quitButton.innerHTML = "Quit ZyClicker";
+quitButton.style.display = "block"; // Ensure it's on a separate line
+quitButton.addEventListener("click", function (event) {
+  clearInterval(animationClicker);
+  dropdownButton.remove();
+  event.stopPropagation();
+});
+
 // Append start button to dropdown content
 dropdownContent.appendChild(startButton);
 dropdownContent.appendChild(stopButton);
+dropdownContent.appendChild(quitButton);
 
 // Prevent button click event from closing dropdown
 startButton.addEventListener("click", function (event) {
